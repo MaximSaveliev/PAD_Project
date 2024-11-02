@@ -1,68 +1,87 @@
-:root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
-
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
 body {
-  margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
+  width: 100dvw;
+  overflow-x: hidden;
+  height: 100%;
+  /* border-color: #3b3b3b; */
+  /* user-select: none; */
 }
 
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
+canvas {
+  touch-action: none;
 }
 
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
-  cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
+.scrim-max-width {
+  margin-inline-start: auto;
+  margin-inline-end: auto;
+  position: relative;
+  max-width: 1120px;
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
+.light{
+  --primary-orange: 255, 100, 16;          /* #FF6410 */
+  --light-orange: 255, 119, 65;            /* #FF7741 */
+  --background: 255, 255, 255;             /* #FFFFFF */
+  --secondary-background: 255, 248, 242;   /* #FFF8F2 */
+  --card-background: 255, 255, 255;        /* #FFFFFF */
+  --card-border: 229, 229, 229;            /* #E5E5E5 */
+  --secondary-accent: 255, 200, 163;       /* #FFC8A3 */
+  --primary-text: 51, 51, 51;              /* #333333 */
+  --secondary-text: 102, 102, 102;         /* #666666 */
+  --placeholder-text: 153, 153, 153;       /* #999999 */
+  --border-dividers: 224, 224, 224;        /* #E0E0E0 */
+
+  /* Topic Colors */
+  --politics-color: 244, 67, 54; /* Red-500 */
+  --business-color: 63, 81, 181; /* Indigo-500 */
+  --technology-color: 33, 150, 243; /* Blue-500 */
+  --health-color: 76, 175, 80; /* Green-500 */
+  --science-color:156, 39, 176; /* Purple-500 */
+  --entertainment-color: 233, 30, 99; /* Pink-500 */
+  --sports-color: 249, 168, 37; /* Yellow-800 */
+  --world-color: 3, 169, 244; /* Light-blue-500 */
+  --opinion-color: 158, 158, 158; /* Gray-500 */
+}
+
+.dark{
+  --primary-orange: 255, 100, 16;          /* #FF6410 */
+  --light-orange: 255, 137, 68;            /* #FF8944 */
+  --background: 27, 27, 27;                /* #1B1B1B */
+  --secondary-background: 42, 42, 42;      /* #2A2A2A */
+  --card-background: 27, 27, 27;           /* #1B1B1B */
+  --card-border: 51, 51, 51;               /* #333333 */
+  --secondary-accent: 255, 145, 94;        /* #FF915E */
+  --primary-text: 234, 234, 234;           /* #EAEAEA */
+  --secondary-text: 179, 179, 179;         /* #B3B3B3 */
+  --placeholder-text: 136, 136, 136;       /* #888888 */
+  --border-dividers: 68, 68, 68;           /* #444444 */
+
+  /* Topic Colors */
+  --politics-color: 239, 83, 80; /* Red-400 */
+  --business-color: 121, 134, 203; /* Indigo-300 */
+  --technology-color: 66, 165, 245; /* Blue-400 */
+  --health-color: 129, 199, 132; /* Green-300 */
+  --science-color: 186, 104, 200; /* Purple-300 */
+  --entertainment-color: 236, 64, 122; /* Pink-400 */
+  --sports-color: 251, 192, 45; /* Yellow-700 */
+  --world-color: 41, 182, 246; /* Light-blue-400 */
+  --opinion-color: 189, 189, 189; /* Gray-400 */
+}
+
+@layer utilities {
+  .badge-sm{
+    @apply inline-flex items-center rounded-full px-2 py-1 text-xs font-medium ring-1 ring-inset select-none;
   }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
+  .badge{
+    @apply inline-flex items-center rounded-full px-3 py-1.5 text-sm font-medium ring-1 ring-inset select-none;
   }
 }

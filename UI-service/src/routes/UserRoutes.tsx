@@ -5,8 +5,8 @@ import Categories from '../pages/user/Articles/Categories'
 import SearchResult from '../pages/user/Articles/SearchResult'
 import UserProfile from '../pages/user/Profile/UserProfile'
 import SavedArticles from '../pages/user/Profile/SavedArticles'
-import Login from '../pages/Auth/Login'
-import Register from '../pages/Auth/Register'
+import Login from '../pages/user/Auth/Login'
+import Register from '../pages/user/Auth/Register'
 import Main from '../pages/Main'
 
 const UserRoutes = () => {

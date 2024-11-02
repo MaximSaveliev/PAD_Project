@@ -5,13 +5,15 @@ import EditArticle from '../pages/admin/Articles/EditArticle'
 import AdminDashboard from '../pages/admin/AdminDashboard'
 import CategoriesManagement from '../pages/admin/CategoriesManagement'
 import UsersList from '../pages/admin/Users'
-import Login from '../pages/Auth/Login'
-import Register from '../pages/Auth/Register'
+import Login from '../pages/user/Auth/Login'
+import Register from '../pages/user/Auth/Register'
+import Main from '../pages/Main'
 
 const AdminRoutes = () => {
   return (
     <Routes>
-      <Route path="/" element={<AdminDashboard />} />
+      <Route path="/" element={<Main />} />
+      <Route path="/dashboard" element={<AdminDashboard />} />
       <Route path="/articles" element={<ArticleList />} />
       <Route path="/articles/create" element={<CreateArticle />} />
       <Route path="/articles/edit/:id" element={<EditArticle />} />

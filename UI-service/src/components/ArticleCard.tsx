@@ -6,8 +6,6 @@ interface Article {
   title: string
   time: string
   logo: string
-  likes: number
-  comments: number
   trending: boolean
 }
 
@@ -18,8 +16,6 @@ const articles: Article[] = [
     title: 'Protests Erupt Across Israel After Netanyahu Fires Defense Minister',
     time: '15h',
     logo: 'https://upload.wikimedia.org/wikipedia/commons/f/fb/Cnn_logo_red_background.png',
-    likes: 36,
-    comments: 20,
     trending: true
   },
   {
@@ -28,8 +24,6 @@ const articles: Article[] = [
     title: 'The Worst Horror Movies of All Time',
     time: '1w',
     logo: 'https://upload.wikimedia.org/wikipedia/commons/f/fb/Cnn_logo_red_background.png',
-    likes: 4000,
-    comments: 1500,
     trending: false
   },
   {
@@ -38,8 +32,6 @@ const articles: Article[] = [
     title: 'The Worst Horror Movies of All Time',
     time: '1w',
     logo: 'https://upload.wikimedia.org/wikipedia/commons/f/fb/Cnn_logo_red_background.png',
-    likes: 4000,
-    comments: 1500,
     trending: false
   },
   {
@@ -48,8 +40,6 @@ const articles: Article[] = [
     title: 'The Worst Horror Movies of All Time',
     time: '1w',
     logo: 'https://upload.wikimedia.org/wikipedia/commons/f/fb/Cnn_logo_red_background.png',
-    likes: 4000,
-    comments: 1500,
     trending: false
   },
   {
@@ -58,39 +48,37 @@ const articles: Article[] = [
     title: 'The Worst Horror Movies of All Time',
     time: '1w',
     logo: 'https://upload.wikimedia.org/wikipedia/commons/f/fb/Cnn_logo_red_background.png',
-    likes: 4000,
-    comments: 1500,
     trending: false
   },
   // Add more articles here...
 ]
 
-const ArticleCard: React.FC<Article> = ({ image, title, time, logo, likes, comments, trending }) => {
+const ArticleCard: React.FC<Article> = ({ image, title, time, logo, trending }) => {
   return (
-    <div className="bg-white rounded-lg shadow-lg overflow-hidden max-w-xs mx-auto my-4">
+    <div className="text-primary-text bg-secondary-background rounded-lg overflow-hidden max-w-xs mx-auto my-4 relative">
       <img src={image} alt={title} className="w-full h-48 object-cover" />
       <div className="p-4">
-        <div className="flex items-center justify-between text-gray-500 text-sm mb-2">
+        <div className="flex items-center justify-between text-primary-text text-sm mb-2">
           <img src={logo} alt="Source Logo" className="w-8 h-8 rounded-full" />
-          <span>{time}</span>
-        </div>
-        <h3 className="text-lg font-semibold mb-2 text-center">{title}</h3>
-        <div className="flex items-center justify-between text-gray-500 text-sm">
-          <div className="flex space-x-2">
-            <span>👍 {likes}</span>
-            <span>💬 {comments}</span>
+          <div className="flex items-center">
+          <i className="text-primary-text fa-regular fa-clock pr-1"></i>
+            <span>{time}</span>
           </div>
-          {trending && <span className="text-blue-500">Trending</span>}
         </div>
+        <h3 className="text-lg font-semibold mb-2 text-left">{title}</h3>
+        {trending && (
+          <div className="absolute top-2 right-2 text-red-500 font-bold text-sm text-left px-2 py-1 bg-secondary-background  rounded-lg">
+            Trending
+          </div>
+        )}
       </div>
     </div>
   )
 }
 
-
 const HeroSection: React.FC = () => {
   return (
-    <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 p-6">
+    <section className="lg:container grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 p-6 mx-auto">
       {articles.map(article => (
         <ArticleCard key={article.id} {...article} />
       ))}

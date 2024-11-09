@@ -1,87 +1,31 @@
-import React from "react";
-import {
-  Navbar,
-  Collapse,
-  Typography,
-  Button,
-  IconButton,
-} from "@material-tailwind/react";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import React from 'react'
+import Search from '../../components/Search'
 
-interface NavItemPropsType {
-  label: string;
-}
-
-function NavItem({ label }: NavItemPropsType) {
+const UserHeader = () => {
   return (
-    <a href="#">
-      <Typography as="li" color="blue-gray" className="p-1 font-medium" placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>
-        {label}
-      </Typography>
-    </a>
-  );
-}
-
-function NavList() {
-  return (
-    <ul className="mb-4 mt-2 flex flex-col gap-3 lg:mb-0 lg:mt-0 lg:flex-row lg:items-center lg:gap-8">
-      <NavItem label="About Us" />
-      <NavItem label="Pricing" />
-      <NavItem label="Contact Us" />
-    </ul>
-  );
-}
-
-export function User() {
-  const [open, setOpen] = React.useState(false);
-  const handleOpen = () => setOpen((cur) => !cur);
-
-  React.useEffect(() => {
-    window.addEventListener(
-      "resize",
-      () => window.innerWidth >= 960 && setOpen(false)
-    );
-  }, []);
-
-  return (
-    <Navbar color="transparent" fullWidth placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>
-      <div className="container mx-auto flex items-center justify-between text-blue-gray-900">
-        <Typography
-          as="a"
-          href="#"
-          color="blue-gray"
-          className="mr-4 cursor-pointer text-lg font-bold" placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}        >
-          Material Tailwind
-        </Typography>
-        <div className="hidden lg:block">
-          <NavList />
+    <>
+      <header className=''>
+        <div className='flex justify-around mx-auto  '>
+          <div className='flex items-center px-4 py-2 text-xl font-bold select-none'>NewsHub</div>
+          <div className='flex gap-3 items-center'>
+            <div className='px-4 py-2 hover:bg-blue-gray-50 hover:bg-opacity-70 rounded-lg'>World</div>
+            <div className='px-4 py-2 hover:bg-blue-gray-50 hover:bg-opacity-70 rounded-lg'>Politics</div>
+            <div className='px-4 py-2 hover:bg-blue-gray-50 hover:bg-opacity-70 rounded-lg'>Business</div>
+            <div className='px-4 py-2 hover:bg-blue-gray-50 hover:bg-opacity-70 rounded-lg'>Technology</div>
+            <div className='flex gap-1 items-center px-4 py-2 hover:bg-blue-gray-50 hover:bg-opacity-70 rounded-lg'>
+              <div>More</div>
+              <i className="fa-solid fa-chevron-down text-secondary-text"></i>
+            </div>
+          </div>
+          <div className='flex items-center gap-4 px-4 py-2'>
+            <Search></Search>
+            <div className='flex items-center justify-center w-10 h-10 rounded-full bg-green-700 text-white select-none'><a href='/admin'>MS</a></div>
+          </div>
         </div>
-        <Button color="gray" className="hidden lg:inline-block" placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>
-          Sign in
-        </Button>
-        <IconButton
-          size="sm"
-          variant="text"
-          color="blue-gray"
-          onClick={handleOpen}
-          className="ml-auto inline-block text-blue-gray-900 lg:hidden" placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}        >
-          {open ? (
-            <FontAwesomeIcon icon="xmark" className="h-5 w-5 text-primary-orange" />
-          ) : (
-            <FontAwesomeIcon icon="paper-plane" className="h-5 w-5 text-primary-orange"/>
-          )}
-        </IconButton>
-      </div>
-      <Collapse open={open}>
-        <div className="mt-2 rounded-xl bg-white py-2">
-          <NavList />
-          <Button className="mb-2" fullWidth placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>
-            Sign in
-          </Button>
-        </div>
-      </Collapse>
-    </Navbar>
-  );
+
+      </header>
+    </>
+  )
 }
 
-export default User;
+export default UserHeader

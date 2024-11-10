@@ -20,6 +20,7 @@ const config: Config = withMT({
         "secondary-text": "rgba(var(--secondary-text))",
         "placeholder-text": "rgba(var(--placeholder-text))",
         "border-dividers": "rgba(var(--border-dividers))",
+        "bg-hover": "rgba(var(--bg-hover))",
 
         /* Topic Colors */
         "politics-color": "rgba(var(--politics-color))", /* Red-500 */

@@ -39,6 +39,7 @@ canvas {
   --secondary-text: 102, 102, 102;         /* #666666 */
   --placeholder-text: 153, 153, 153;       /* #999999 */
   --border-dividers: 224, 224, 224;        /* #E0E0E0 */
+  --bg-hover: 242, 244, 245;               /* #F2F4F5 */
 
   /* Topic Colors */
   --politics-color: 244, 67, 54; /* Red-500 */
@@ -64,6 +65,7 @@ canvas {
   --secondary-text: 179, 179, 179;         /* #B3B3B3 */
   --placeholder-text: 136, 136, 136;       /* #888888 */
   --border-dividers: 68, 68, 68;           /* #444444 */
+  --bg-hover: 38, 50, 56;                  /* #263238 */
 
   /* Topic Colors */
   --politics-color: 239, 83, 80; /* Red-400 */

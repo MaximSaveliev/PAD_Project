@@ -80,7 +80,7 @@ const AdminHeader = () => {
                 ></i>
               </div>
               {isDropdownVisible && (
-                <div className="absolute mt-2 p-2 w-40 bg-background border-none outline-none shadow-sm rounded-lg">
+                <div className="absolute mt-2 p-2 w-40 bg-background border-none outline-none shadow-sm rounded-lg z-10">
                   {navigationItems.slice(4).map((item) => (
                     <NavLink
                       key={item.name}
@@ -125,7 +125,7 @@ const AdminHeader = () => {
 
       {/* Sidebar - visible on all screens except large */}
       <div
-        className={`fixed inset-0 bg-background/30 select-none transition-opacity block lg:hidden ${isSidebarOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'
+        className={`fixed inset-0 bg-background/30 select-none transition-opacity block z-50 lg:hidden ${isSidebarOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'
           }`}
         onClick={toggleSidebar}
       >

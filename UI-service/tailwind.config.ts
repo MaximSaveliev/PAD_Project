@@ -32,7 +32,16 @@ const config: Config = withMT({
         "sports-color": "rgba(var(--sports-color))", /* Yellow-500 */
         "world-color": "rgba(var(--world-color))", /* Indigo-500 */
         "opinion-color": "rgba(var(--opinion-color))", /* Gray-500 */
-      }
+      },
+      keyframes: {
+        "infinite-X-scroll": {
+          "0%": { transform: "translateX(0)" },
+          "100%": { transform: "translateX(-50%)" }, // Moves halfway to cover all items
+        }
+      },
+      animation: {
+        "infinite-X-scroll": "infinite-X-scroll 10s linear infinite", // Adjust duration for desired speed
+      },
     },
   },
   plugins: [],

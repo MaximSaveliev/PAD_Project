@@ -2,13 +2,17 @@ import React, { useContext } from 'react'
 import Hero from '../components/Hero'
 import ArticleCard from '../components/ArticleCard'
 import { ThemeContext } from '../context/ThemeContext';
+import NewsPartners from '../components/NewsPartners';
+import TopTopicArticles from '../components/TopTopicArticles';
 
 const Main = () => {
   const { theme, toggleTheme } = useContext(ThemeContext);
   return (
     <>
       <Hero></Hero>
+      <TopTopicArticles></TopTopicArticles>
       <ArticleCard></ArticleCard>
+      <NewsPartners></NewsPartners>
       <button onClick={toggleTheme}>
         Switch to {theme === 'light' ? 'Dark' : 'Light'} Theme
       </button>

@@ -1,6 +1,6 @@
 import React from 'react';
 
-const HeroSection = () => {
+const Hero = () => {
   const newsItems = [
     {
       id: 1,
@@ -147,4 +147,4 @@ const HeroSection = () => {
   );
 };
 
-export default HeroSection;
+export default Hero;

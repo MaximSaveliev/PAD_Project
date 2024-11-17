@@ -47,7 +47,7 @@ const MainArticle: React.FC<ArticleProps> = ({
               <img 
                 src={sourceInfo.logo} 
                 alt={sourceInfo.name} 
-                className="h-4 w-4 object-contain"
+                className="h-6 w-6 object-cover rounded-full"
               />
               <span className='text-secondary-text text-[12px] font-semibold'>{author}</span>
               <span className='text-secondary-text text-[12px]'>{sourceInfo.timeAgo}</span>
@@ -91,7 +91,7 @@ const SideArticle: React.FC<ArticleProps> = ({
               <img 
                 src={sourceInfo.logo} 
                 alt={sourceInfo.name} 
-                className="h-4 w-4 object-contain"
+                className="h-6 w-6 object-cover rounded-full"
               />
               <span className='text-secondary-text text-[12px] font-semibold'>{author}</span>
               <span className='text-secondary-text text-[12px]'>{sourceInfo.timeAgo}</span>
@@ -135,7 +135,7 @@ const BottomArticle: React.FC<ArticleProps> = ({
               <img 
                 src={sourceInfo.logo} 
                 alt={sourceInfo.name} 
-                className="h-4 w-4 object-contain"
+                className="h-6 w-6 object-cover rounded-full"
               />
               <span className="text-secondary-text text-[12px] font-semibold">{author}</span>
               <span className="text-secondary-text text-[12px]">{sourceInfo.timeAgo}</span>

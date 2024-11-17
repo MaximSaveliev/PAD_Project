@@ -6,6 +6,7 @@ import NewsPartners from '../components/NewsPartners';
 import TopTopicArticles from '../components/TopTopicArticles';
 import { NewsArticleSummary } from '../types/articleTypes';
 import ArticleList from '../components/ArticleList';
+import SoundWaves from '../components/SoundWaves';
 
 const techArticles: NewsArticleSummary[] = [
     {
@@ -78,6 +79,7 @@ const Main = () => {
       articles={techArticles}
       accentColor="bg-technology-color"></TopTopicArticles>
       <ArticleList topic="Technology"></ArticleList>
+      <SoundWaves></SoundWaves>
       <ArticleCard></ArticleCard>
       <NewsPartners></NewsPartners>
       <button onClick={toggleTheme}>

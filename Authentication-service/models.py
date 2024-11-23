@@ -1,9 +1,17 @@
 from pydantic import BaseModel
+from typing import List, Optional
+
+class UserRole(str):
+    USER = "user"
+    ADMIN = "admin"
+    EDITOR = "editor"
 
 class RegisterRequest(BaseModel):
     email: str
     password: str
-    username: str = None  # Optional
+    firstName: str
+    lastName: str
+    preferredTopics: List[str] = []
 
 class LoginRequest(BaseModel):
     email: str
@@ -11,7 +19,18 @@ class LoginRequest(BaseModel):
 
 class TokenRequest(BaseModel):
     token: str
+    userData: Optional[dict] = None
 
 class SetPasswordRequest(BaseModel):
     email: str
     password: str
+
+class UserResponse(BaseModel):
+    id: str
+    firstName: str
+    lastName: str
+    role: str
+    preferredTopics: List[str]
+    email: str
+    dateJoined: str
+    lastLogin: Optional[str] = None

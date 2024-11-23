@@ -9,9 +9,14 @@ import bcrypt
 
 # Initialize Firebase and FastAPI as before
 cred = credentials.Certificate("./newshub-97e29-firebase-adminsdk-kn7x6-4fba892b01.json")
+print(cred)
 firebase_admin.initialize_app(cred)
 db = firestore.client()
-app = FastAPI()
+app = FastAPI(
+    title="NewsHub API",
+    description="This API for Auth service",
+    version="1.0.0",
+)
 
 # CORS middleware setup as before
 app.add_middleware(
@@ -22,7 +27,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-@app.post("/register")
+@app.post("/register", tags=["Users"])
 async def register_user(register_data: RegisterRequest):
     try:
         # Create user in Firebase Auth
@@ -42,6 +47,7 @@ async def register_user(register_data: RegisterRequest):
             "firstName": register_data.firstName,
             "lastName": register_data.lastName,
             "role": "user",  # Default role
+            "plan": "basic",  # Default plan
             "preferredTopics": register_data.preferredTopics,
             "uid": user.uid,
             "dateJoined": datetime.now().isoformat(),
@@ -59,7 +65,7 @@ async def register_user(register_data: RegisterRequest):
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
-@app.post("/login")
+@app.post("/login", tags=["Users"])
 async def login_user(login_data: LoginRequest):
     try:
         # Fetch user from Firestore
@@ -85,6 +91,7 @@ async def login_user(login_data: LoginRequest):
                     "firstName": user_data.get('firstName', ''),
                     "lastName": user_data.get('lastName', ''),
                     "role": user_data.get('role', 'user'),
+                    "plan": user_data.get('plan', 'basic'),
                     "preferredTopics": user_data.get('preferredTopics', []),
                     "email": user_data['email'],
                     "dateJoined": user_data.get('dateJoined', ''),
@@ -96,7 +103,7 @@ async def login_user(login_data: LoginRequest):
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
-@app.post("/auth/verify-token")
+@app.post("/auth/verify-token", tags=["Token verification"])
 async def verify_token(token_data: TokenRequest):
     try:
         decoded_token = auth.verify_id_token(token_data.token)
@@ -113,6 +120,7 @@ async def verify_token(token_data: TokenRequest):
                 "firstName": token_data.userData.get('firstName', '') if token_data.userData else '',
                 "lastName": token_data.userData.get('lastName', '') if token_data.userData else '',
                 "role": "user",
+                "plan": "basic",
                 "preferredTopics": token_data.userData.get('preferredTopics', []) if token_data.userData else [],
                 "uid": uid,
                 "dateJoined": datetime.now().isoformat(),
@@ -135,6 +143,7 @@ async def verify_token(token_data: TokenRequest):
                     "firstName": user_data.get('firstName', ''),
                     "lastName": user_data.get('lastName', ''),
                     "role": user_data.get('role', 'user'),
+                    "plan": user_data.get('plan', 'basic'),
                     "preferredTopics": user_data.get('preferredTopics', []),
                     "email": email,
                     "dateJoined": user_data.get('dateJoined', ''),
@@ -145,7 +154,7 @@ async def verify_token(token_data: TokenRequest):
     except Exception as e:
         raise HTTPException(status_code=401, detail="Invalid token or other error: " + str(e))
 
-@app.post("/auth/set-password")
+@app.post("/auth/set-password", tags=["Password"])
 async def set_password(set_password_data: SetPasswordRequest):
     try:
         firebase_user = auth.get_user_by_email(set_password_data.email)
@@ -173,6 +182,7 @@ async def set_password(set_password_data: SetPasswordRequest):
                 "firstName": user_data.get('firstName', ''),
                 "lastName": user_data.get('lastName', ''),
                 "role": user_data.get('role', 'user'),
+                "plan": user_data.get('plan', 'basic'),
                 "preferredTopics": user_data.get('preferredTopics', []),
                 "email": user_data['email'],
                 "dateJoined": user_data.get('dateJoined', ''),
@@ -184,7 +194,7 @@ async def set_password(set_password_data: SetPasswordRequest):
         raise HTTPException(status_code=500, detail=str(e))
 
 # Reset password endpoint remains the same
-@app.post("/reset-password")
+@app.post("/reset-password", tags=["Password"])
 async def reset_password(email: str):
     try:
         auth.generate_password_reset_link(email)

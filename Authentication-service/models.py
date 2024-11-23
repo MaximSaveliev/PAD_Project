@@ -4,7 +4,10 @@ from typing import List, Optional
 class UserRole(str):
     USER = "user"
     ADMIN = "admin"
-    EDITOR = "editor"
+
+class UserPlan(str):
+    BASIC = "basic"
+    PREMIUM = "premium"
 
 class RegisterRequest(BaseModel):
     email: str

@@ -1,5 +1,5 @@
 import React from "react";
-import { auth, provider } from "./firebase-config"; // Ensure the path is correct
+import { auth, provider } from "./pages/user/Auth/firebase-config"; // Ensure the path is correct
 import { signInWithPopup } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 

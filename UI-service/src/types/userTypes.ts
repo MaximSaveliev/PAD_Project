@@ -8,4 +8,3 @@ export interface UserType {
     dateJoined?: string;
     lastLogin?: string;
   }
-  

@@ -8,6 +8,8 @@ import SavedArticles from '../pages/user/Profile/SavedArticles'
 import Login from '../pages/user/Auth/Login'
 import Register from '../pages/user/Auth/Register'
 import Main from '../pages/Main'
+import PrivacyPolicy from '../pages/PrivacyPolicy'
+import TermsAndConditions from '../pages/TermsAndConditions'
 
 const UserRoutes = () => {
   return (
@@ -21,6 +23,8 @@ const UserRoutes = () => {
       <Route path="/profile/:id/saved-articles" element={<SavedArticles />} />
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
+      <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+      <Route path="/terms-and-conditions" element={<TermsAndConditions />} />
     </Routes>
   )
 }

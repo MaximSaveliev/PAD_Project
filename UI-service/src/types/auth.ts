@@ -2,7 +2,7 @@ export type UserRole = 'user' | 'admin';
 export type UserPlan = 'basic' | 'premium';
 
 export interface User {
-  id: string;
+  uid: string;
   firstName: string;
   lastName: string;
   role: UserRole;
@@ -10,6 +10,14 @@ export interface User {
   email: string;
   dateJoined: string;
   lastLogin?: string;
+}
+
+export interface RegisterData {
+  email: string;
+  password: string;
+  firstName: string;
+  lastName: string;
+  preferredTopics: string[];
 }
 
 export interface LoginFormData {
@@ -32,6 +40,7 @@ export interface AuthContextType {
   error: string | null;
   login: (email: string, password: string) => Promise<void>;
   loginWithGoogle: () => Promise<void>;
+  register: (data: RegisterData) => Promise<void>;
   logout: () => Promise<void>;
   clearError: () => void;
 }

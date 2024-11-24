@@ -1,7 +1,7 @@
 import { createContext, useState, useEffect } from 'react';
 import { auth, provider } from '../config/firebase-config'; // Make sure to import your firebase config
 import { signInWithEmailAndPassword, signInWithPopup } from 'firebase/auth';
-import { User, AuthContextType, BackendResponse } from '../types/auth';
+import { User, AuthContextType, BackendResponse, RegisterData } from '../types/auth';
 
 const AuthContext = createContext<AuthContextType | null>(null);
 
@@ -109,6 +109,37 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
+  const register = async (registerData: RegisterData) => {
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      const response = await fetch("http://localhost:8000/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(registerData),
+      });
+
+      if (!response.ok) {
+        throw new Error(await response.text());
+      }
+
+      const data: BackendResponse = await response.json();
+
+      if (data.user) {
+        setUser(data.user);
+        localStorage.setItem("user", JSON.stringify(data.user));
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Registration failed");
+      throw err;
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const logout = async () => {
     try {
       await auth.signOut();
@@ -133,6 +164,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         login,
         loginWithGoogle,
         logout,
+        register,
         clearError,
       }}
     >

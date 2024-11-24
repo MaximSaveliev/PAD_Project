@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import AdminHeader from './AdminHeader'
+// import AdminHeader from './AdminHeader'
 import AdminSidebar from './AdminSidebar'
 import AdminRoutes from '../../routes/AdminRoutes'
 
@@ -7,7 +7,7 @@ export class AdminLayout extends Component {
   render() {
     return (
       <>
-        <AdminHeader></AdminHeader>
+        {/* <AdminHeader></AdminHeader> */}
         <AdminRoutes></AdminRoutes>
         <AdminSidebar></AdminSidebar>
       </>

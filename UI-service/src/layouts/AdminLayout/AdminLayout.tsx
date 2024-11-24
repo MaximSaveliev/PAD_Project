@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import { Component } from 'react'
 // import AdminHeader from './AdminHeader'
 import AdminSidebar from './AdminSidebar'
 import AdminRoutes from '../../routes/AdminRoutes'

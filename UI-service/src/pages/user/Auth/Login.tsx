@@ -1,26 +1,6 @@
-import React, { useState } from "react";
-import { auth, provider } from "./firebase-config";
-import { signInWithPopup, signInWithEmailAndPassword } from "firebase/auth";
+import React, { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
-
-export interface UserType {
-  id: string;
-  firstName: string;
-  lastName: string;
-  role: 'user' | 'admin' | 'editor';
-  preferredTopics: string[];
-  email: string;
-  dateJoined?: string;
-  lastLogin?: string;
-}
-
-interface BackendResponse {
-  msg: string;
-  uid: string;
-  email: string;
-  setted_password: boolean;
-  user?: UserType;
-}
+import AuthContext from "../../../context/AuthContext";
 
 interface LoginFormData {
   email: string;
@@ -29,12 +9,19 @@ interface LoginFormData {
 
 const Login: React.FC = () => {
   const navigate = useNavigate();
+  const auth = useContext(AuthContext);
+  
+  if (!auth) {
+    throw new Error("AuthContext not found");
+  }
+
   const [formData, setFormData] = useState<LoginFormData>({
     email: "",
     password: "",
   });
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [isEmailLoading, setIsEmailLoading] = useState(false);
+  const [isGoogleLoading, setIsGoogleLoading] = useState(false);
+  const [passwordShown, setPasswordShown] = useState(false);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -44,161 +31,160 @@ const Login: React.FC = () => {
     }));
   };
 
+  const togglePasswordVisiblity = () => {
+    setPasswordShown((cur) => !cur);
+  };
+
   // Traditional Email/Password Login
   const handleEmailSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsLoading(true);
-    setError(null);
-  
+    setIsEmailLoading(true);
+    auth.clearError();
+
     try {
-      const userCredential = await signInWithEmailAndPassword(
-        auth,
-        formData.email,
-        formData.password
-      );
-      const idToken = await userCredential.user.getIdToken();
-  
-      const response = await fetch("http://localhost:8000/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email: formData.email,
-          password: formData.password,
-          token: idToken,
-        }),
-      });
-  
-      if (!response.ok) {
-        const errorText = await response.text();
-        throw new Error(`Login failed: ${errorText}`);
-      }
-  
-      const data: BackendResponse = await response.json();
-  
-      if (data.user) {
-        localStorage.setItem("user", JSON.stringify(data.user));
-        navigate("/"); // Redirect to home page
-      }
+      await auth.login(formData.email, formData.password);
+      navigate("/");
     } catch (error) {
-      setError(error instanceof Error ? error.message : "Login failed");
+      console.error("Login failed:", error);
     } finally {
-      setIsLoading(false);
+      setIsEmailLoading(false);
     }
-  };  
+  };
 
   // Google Sign-In
   const handleGoogleSignIn = async () => {
-    setIsLoading(true);
-    setError(null);
+    setIsGoogleLoading(true);
+    auth.clearError();
 
     try {
-      const result = await signInWithPopup(auth, provider);
-      const idToken = await result.user.getIdToken();
-
-      const response = await fetch("http://localhost:8000/auth/verify-token", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ 
-          token: idToken,
-          // Include default user data for new registrations
-          userData: {
-            firstName: result.user.displayName?.split(' ')[0] || '',
-            lastName: result.user.displayName?.split(' ')[1] || '',
-            role: 'user', // Default role
-            preferredTopics: [],
-            email: result.user.email || '',
-            dateJoined: new Date().toISOString(),
-          }
-        }),
-      });
-
-      if (!response.ok) {
-        throw new Error("Failed to verify token with backend.");
-      }
-
-      const data: BackendResponse = await response.json();
-
-      if (data.setted_password === false) {
-        localStorage.setItem("userEmail", data.email);
-        navigate("/set-password");
-      } else {
-        navigate("/");
-      }
-
+      await auth.loginWithGoogle();
+      navigate("/");
     } catch (error) {
-      setError(error instanceof Error ? error.message : "Google Sign-In failed");
+      if (error instanceof Error && error.message === "PASSWORD_NOT_SET") {
+        navigate("/set-password");
+      }
     } finally {
-      setIsLoading(false);
+      setIsGoogleLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full space-y-8">
-        <div>
-          <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-            Sign in to your account
-          </h2>
-        </div>
+    <section className="grid text-center h-screen items-center p-8 pr-0">
+      <div>
+        <h3 className="text-3xl font-bold text-primary-text mb-2">
+          Sign In
+        </h3>
+        <p className="mb-16 text-secondary-text font-normal text-[18px]">
+          Enter your email and password to sign in
+        </p>
 
-        {error && (
-          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
-            {error}
+        {auth.error && (
+          <div className="mx-auto max-w-[24rem] mb-4">
+            <p className="text-red-500 text-center">
+              {auth.error}
+            </p>
           </div>
         )}
 
-        <form className="mt-8 space-y-6" onSubmit={handleEmailSignIn}>
-          <div className="rounded-md shadow-sm -space-y-px">
-            <div>
+        <form onSubmit={handleEmailSignIn} className="mx-auto max-w-[24rem] text-left">
+          <div className="mb-6">
+            <label htmlFor="email" className="mb-2 block text-sm font-medium text-primary-text">
+              Email
+            </label>
+            <input
+              id="email"
+              type="email"
+              name="email"
+              value={formData.email}
+              onChange={handleInputChange}
+              placeholder="name@mail.com"
+              className="w-full px-3 py-3 text-primary-text bg-transparent border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900 dark:focus:ring-white focus:border-transparent placeholder:text-secondary-text"
+              required
+            />
+          </div>
+
+          <div className="mb-6 relative">
+            <label htmlFor="password" className="mb-2 block text-sm font-medium text-primary-text">
+              Password
+            </label>
+            <div className="relative">
               <input
-                name="email"
-                type="email"
-                required
-                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-                placeholder="Email address"
-                value={formData.email}
-                onChange={handleInputChange}
-              />
-            </div>
-            <div>
-              <input
+                id="password"
                 name="password"
-                type="password"
-                required
-                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-                placeholder="Password"
+                type={passwordShown ? "text" : "password"}
                 value={formData.password}
                 onChange={handleInputChange}
+                placeholder="********"
+                className="w-full px-3 py-3 text-primary-text bg-transparent border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900 dark:focus:ring-white focus:border-transparent placeholder:text-secondary-text pr-10"
+                required
               />
+              <button
+                type="button"
+                onClick={togglePasswordVisiblity}
+                className="absolute inset-y-0 right-0 flex items-center pr-3"
+              >
+                  {passwordShown ? (
+                    <i className="fa-regular fa-eye"></i>
+                  ) : (
+                    <i className="fa-regular fa-eye-slash"></i>
+                  )}
+              </button>
             </div>
           </div>
 
-          <div>
-            <button
-              type="submit"
-              disabled={isLoading}
-              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-            >
-              {isLoading ? "Signing in..." : "Sign in"}
-            </button>
-          </div>
-        </form>
-
-        <div className="mt-6">
           <button
-            onClick={handleGoogleSignIn}
-            disabled={isLoading}
-            className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+            type="submit"
+            disabled={isEmailLoading}
+            className="w-full mt-6 px-4 py-3 text-sm font-semibold text-primary-text bg-gray-200 rounded-lg hover:bg-gray-900 dark:bg-gray-800 dark:hover:bg-gray-100 dark:hover:text-gray-900 hover:text-white focus:outline-none focus:ring-2 focus:ring-gray-900 dark:focus:ring-white focus:ring-offset-2 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors duration-200"
           >
-            {isLoading ? "Signing in..." : "Sign in with Google"}
+            {isEmailLoading ? "Signing in..." : "Sign in"}
           </button>
-        </div>
+
+          <div className="mt-4 flex justify-end">
+            <a
+              href="#"
+              className="text-sm font-medium text-secondary-text hover:underline hover:text-primary-text"
+            >
+              Forgot password
+            </a>
+          </div>
+
+          <button
+            type="button"
+            onClick={handleGoogleSignIn}
+            disabled={isGoogleLoading}
+            className="w-full mt-6 px-4 py-3 text-sm font-semibold text-primary-text border border-gray-300 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-900 dark:focus:ring-white focus:ring-offset-2 disabled:bg-gray-100 disabled:cursor-not-allowed transition-colors duration-200 flex items-center justify-center gap-2"
+          >
+            <svg className="h-6 w-6" viewBox="0 0 24 24">
+              <path
+                d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
+                fill="#4285F4"
+              />
+              <path
+                d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
+                fill="#34A853"
+              />
+              <path
+                d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"
+                fill="#FBBC05"
+              />
+              <path
+                d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
+                fill="#EA4335"
+              />
+            </svg>
+            {isGoogleLoading ? "Signing in..." : "Sign in with Google"}
+          </button>
+
+          <p className="mt-4 text-center text-sm text-secondary-text">
+            Not registered?{" "}
+            <a href="/register" className="font-medium text-primary-text hover:underline">
+              Create account
+            </a>
+          </p>
+        </form>
       </div>
-    </div>
+    </section>
   );
 };
 

@@ -4,6 +4,7 @@ import { ThemeContext } from '../../context/ThemeContext';
 import { auth } from '../../pages/user/Auth/firebase-config';
 import { User } from 'firebase/auth';
 import Search from '../../components/Search';
+import AuthContext from '../../context/AuthContext';
 
 // Interface for navigation items
 interface NavigationItem {
@@ -28,6 +29,7 @@ const UserHeader: React.FC = () => {
   const timeoutId = useRef<NodeJS.Timeout | null>(null);
   const userTimeoutId = useRef<NodeJS.Timeout | null>(null);
   const navigate = useNavigate();
+  const authContext = useContext(AuthContext);
 
   // Navigation items array
   const navigationItems: NavigationItem[] = [
@@ -62,8 +64,13 @@ const UserHeader: React.FC = () => {
   // Handle sign out
   const handleSignOut = async () => {
     try {
-      await auth.signOut();
-      navigate('/');
+      if (authContext && authContext.logout) {
+        await authContext.logout();
+        navigate('/');
+        console.log("User signed out successfully");
+      } else {
+        console.log("Logout function not available");
+      }
     } catch (error) {
       console.error('Error signing out:', error);
     }
@@ -228,7 +235,7 @@ const UserHeader: React.FC = () => {
                         Sign In
                       </NavLink>
                       <NavLink
-                        to="/signup"
+                        to="/register"
                         className="flex items-center px-4 py-2 rounded-lg hover:bg-bg-hover"
                       >
                         <i className="fa-solid fa-user-plus w-5 mr-2"></i>

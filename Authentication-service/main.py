@@ -83,7 +83,7 @@ async def login_user(login_data: LoginRequest):
             # Update last login
             user_ref.update({"lastLogin": datetime.now().isoformat()})
             
-            # Return user data in the specified format
+            # Return user data in the specified format with all fields
             return {
                 "msg": "Login successful",
                 "user": {
@@ -95,7 +95,8 @@ async def login_user(login_data: LoginRequest):
                     "preferredTopics": user_data.get('preferredTopics', []),
                     "email": user_data['email'],
                     "dateJoined": user_data.get('dateJoined', ''),
-                    "lastLogin": datetime.now().isoformat()
+                    "lastLogin": user_data.get('lastLogin', datetime.now().isoformat()),  # Use lastLogin from Firestore
+                    "setted_password": user_data.get('setted_password', False),  # Ensure this field is returned
                 }
             }
         else:
@@ -125,10 +126,10 @@ async def verify_token(token_data: TokenRequest):
                 "uid": uid,
                 "dateJoined": datetime.now().isoformat(),
                 "lastLogin": datetime.now().isoformat(),
-                "setted_password": False
+                "setted_password": user_data.get('setted_password', False),
             }
             user_ref.set(user_data)
-            return {"msg": "Token is valid", "uid": uid, "email": email, "setted_password": False, "user": user_data}
+            return {"msg": "Token is valid", "uid": uid, "email": email, "user": user_data}
         else:
             user_data = user_doc.to_dict()
             # Update last login
@@ -147,7 +148,8 @@ async def verify_token(token_data: TokenRequest):
                     "preferredTopics": user_data.get('preferredTopics', []),
                     "email": email,
                     "dateJoined": user_data.get('dateJoined', ''),
-                    "lastLogin": datetime.now().isoformat()
+                    "lastLogin": user_data.get('lastLogin', datetime.now().isoformat()),  # Ensure 'lastLogin' is from Firestore
+                    "setted_password": user_data.get('setted_password', False),
                 }
             }
 
@@ -186,7 +188,8 @@ async def set_password(set_password_data: SetPasswordRequest):
                 "preferredTopics": user_data.get('preferredTopics', []),
                 "email": user_data['email'],
                 "dateJoined": user_data.get('dateJoined', ''),
-                "lastLogin": datetime.now().isoformat()
+                "lastLogin": datetime.now().isoformat(),
+                "setted_password": user_data.get('setted_password', True),
             }
         }
 

@@ -1,0 +1,43 @@
+version: '3.8'
+
+services:
+  ui:
+    build:
+      context: ./ui
+      dockerfile: Dockerfile
+    ports:
+      - "5173:5173"
+
+  text-to-speech:
+    build:
+      context: ./text-to-speech
+      dockerfile: Dockerfile
+    ports:
+      - "8002:8002"
+    volumes:
+      - ./text-to-speech/newshub-articles-firebase-adminsdk-8ndx9-c3b042bb32.json:/app/newshub-articles-firebase-adminsdk-8ndx9-c3b042bb32.json
+
+  scraping-service:
+    build:
+      context: ./scraping-service
+      dockerfile: Dockerfile
+    volumes:
+      - ./scraping-service/newsspiders/newsspiders/newshub-articles-firebase-adminsdk-8ndx9-c3b042bb32.json:/app/newsspiders/newsspiders/newshub-articles-firebase-adminsdk-8ndx9-c3b042bb32.json
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "8001:8001"
+    volumes:
+      - ./backend/newshub-articles-firebase-adminsdk-8ndx9-c3b042bb32.json:/app/newshub-articles-firebase-adminsdk-8ndx9-c3b042bb32.json
+
+  authentication-service:
+    build:
+      context: ./authentication-service
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./authentication-service/newshub-articles-firebase-adminsdk-8ndx9-c3b042bb32.json:/app/newshub-articles-firebase-adminsdk-8ndx9-c3b042bb32.json

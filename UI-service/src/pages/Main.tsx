@@ -1,5 +1,4 @@
 import Hero from '../components/Hero'
-import ArticleCard from '../components/ArticleCard'
 import NewsPartners from '../components/NewsPartners';
 import TopTopicArticles from '../components/TopTopicArticles';
 import { NewsArticleSummary } from '../types/articleTypes';
@@ -77,7 +76,6 @@ const Main = () => {
       accentColor="bg-technology-color"></TopTopicArticles>
       <ArticleList topic="Technology"></ArticleList>
       <SoundWaves></SoundWaves>
-      <ArticleCard></ArticleCard>
       <NewsPartners></NewsPartners>
     </>
   )
